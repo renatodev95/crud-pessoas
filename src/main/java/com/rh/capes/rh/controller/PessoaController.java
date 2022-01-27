@@ -24,9 +24,13 @@ public class PessoaController {
     }
 
     @GetMapping("/rh/pessoas/nova")
-    public String novaPessoa(@ModelAttribute("pessoa")Pessoa pessoa) {
+    public String novaPessoa(@ModelAttribute("pessoa") Pessoa pessoa) {
         return "rh/pessoas/form";
     }
 
-
+    @PostMapping("/rh/pessoas/salvar")
+    public String salvarPessoa(@ModelAttribute("pessoa") Pessoa pessoa) {
+        repositorio.save(pessoa);
+        return "redirect:/rh/pessoas";
+    }
 }
