@@ -31,9 +31,7 @@ public class PessoaController {
     @GetMapping("/rh/pessoas/{id}")
     private String alterarPessoa(@PathVariable Long id, Model model) {
         Optional<Pessoa> pessoaOptional = repositorio.findById(id);
-        if (pessoaOptional.isEmpty()) {
-            throw new IllegalArgumentException("Pessoa inválida.");
-        }
+        validaPessoaExistenteNoBanco(pessoaOptional);
         model.addAttribute("pessoa", pessoaOptional.get());
         return "rh/pessoas/form";
     }
@@ -45,12 +43,16 @@ public class PessoaController {
     }
 
     @GetMapping("/rh/pessoas/excluir/{id}")
-    private String deletarPessoa(@PathVariable Long id) {
+    public String deletarPessoa(@PathVariable Long id) {
         Optional<Pessoa> pessoaOptional = repositorio.findById(id);
+        validaPessoaExistenteNoBanco(pessoaOptional);
+        repositorio.delete(pessoaOptional.get());
+        return "redirect:/rh/pessoas";
+    }
+
+    private void validaPessoaExistenteNoBanco(Optional pessoaOptional) {
         if (pessoaOptional.isEmpty()) {
             throw new IllegalArgumentException("Pessoa inválida.");
         }
-        repositorio.delete(pessoaOptional.get());
-        return "redirect:/rh/pessoas";
     }
 }
