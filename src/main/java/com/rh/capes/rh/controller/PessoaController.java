@@ -50,7 +50,7 @@ public class PessoaController {
         return "redirect:/rh/pessoas";
     }
 
-    private void validaPessoaExistenteNoBanco(Optional pessoaOptional) {
+    private void validaPessoaExistenteNoBanco(Optional<Pessoa> pessoaOptional) {
         if (pessoaOptional.isEmpty()) {
             throw new IllegalArgumentException("Pessoa inválida.");
         }
