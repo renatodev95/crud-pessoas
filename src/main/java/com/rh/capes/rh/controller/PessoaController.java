@@ -4,9 +4,9 @@ import com.rh.capes.rh.domain.Pessoa;
 import com.rh.capes.rh.repository.PessoaRepositorio;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
 public class PessoaController {
@@ -28,9 +28,29 @@ public class PessoaController {
         return "rh/pessoas/form";
     }
 
+    @GetMapping("/rh/pessoas/{id}")
+    private String alterarPessoa(@PathVariable Long id, Model model) {
+        Optional<Pessoa> pessoaOptional = repositorio.findById(id);
+        if (pessoaOptional.isEmpty()) {
+            throw new IllegalArgumentException("Pessoa inválida.");
+        }
+        model.addAttribute("pessoa", pessoaOptional.get());
+        return "rh/pessoas/form";
+    }
+
     @PostMapping("/rh/pessoas/salvar")
     public String salvarPessoa(@ModelAttribute("pessoa") Pessoa pessoa) {
         repositorio.save(pessoa);
+        return "redirect:/rh/pessoas";
+    }
+
+    @GetMapping("/rh/pessoas/excluir/{id}")
+    private String deletarPessoa(@PathVariable Long id) {
+        Optional<Pessoa> pessoaOptional = repositorio.findById(id);
+        if (pessoaOptional.isEmpty()) {
+            throw new IllegalArgumentException("Pessoa inválida.");
+        }
+        repositorio.delete(pessoaOptional.get());
         return "redirect:/rh/pessoas";
     }
 }
